@@ -32,18 +32,121 @@ var message = " ";
 var gameHTML = " ";
 var letter = " ";
 
-randomWord = words[Math.floor(Math.random() * words.length)];
-
-for (var i = 0; i < randomWord.length; i++) {
-
-    if (randomWord.substr(i, 1) === " ") {
-        letter = randomWord.substr(i, 1)
-        hiddenWord += "&nbsp;&nbsp;"
+function validLetter() {
+    if ((letter >= "a") && (letter <= "z")) {
+        return true
     } else {
-        letter = randomWord.substr(i, 1)
-        hiddenWord += "_ "
+        return false
     }
 }
+
+function buildHiddenWord() {
+    hits = 0;
+    spaces = 0;
+    hiddenWord = "";
+
+    //Check to see if letters guessed match within the random word
+    //or if we just got a new random word then this will simply create our hidden word string 
+    for (var i = 0; i < randomWord.length; i++) {
+        if (randomWord.substr(i, 1) === " ") {
+            //spaces are ignored
+            hiddenWord += "&nbsp;&nbsp;"
+            spaces++
+        } //end-if space check
+        else if (guessedLetters.indexOf(randomWord.substr(i, 1)) >= 0) {
+            //Character of random word matches a guessed letter
+            hiddenWord += randomWord.substr(i, 1) + " "
+            hits++
+        } //end if of letter match
+        else {
+            //guessed letter doesn't match the character in random word
+            hiddenWord += "_ "
+        }
+    } //end for loop
+} //end function
+
+function getRandomWord() {
+    randomWord = words[Math.floor(Math.random() * words.length)];
+}
+
+function checkNewLetter() {
+
+    if (guessedLetters.indexOf(letter) < 0) {
+        //letter was not guessed yet. continue process
+        return true
+    } else {
+        //the letter was guessed alredy
+        return false
+    }
+}
+
+function checkGuessedLetter() {
+    //check if the current letter guessed was a hit or miss
+    if (randomWord.indexOf(letter) >= 0) {
+        //the letter pushed is part of the random word
+        message = "Good Job! You found a letter!"
+    } else {
+        message = "Ooops! Try Again!"
+        guesses--
+    }
+
+}
+
+function checkResults() {
+
+    if ((hits + spaces) === randomWord.length) {
+        wins++
+        message = "Congrats! You Won!!! Now try a new word!"
+        return true
+
+        //reset the game with a new word
+        //start over
+    } else if (guesses === 0) {
+        //LOSER
+        losses++
+        message = "You suck! Better luck next time. Try Again!"
+        return true
+    } else {
+        return false
+    }
+
+}
+
+function processLetter() {
+
+    //check to see if the guessed letter was guessed already
+    newLetter = checkNewLetter()
+
+    //if not guessed, process letter 
+    if (newLetter === true) {
+
+        guessedLetters.push(letter)
+
+
+        checkGuessedLetter()
+
+        buildHiddenWord()
+
+        gameover = checkResults()
+
+    } //end new letter
+
+    //if guessed already, don't add to array and let user know they guessed that letter already
+    //and don't process the letter any further        
+    else { // we do not have a new letter
+        message = "You tried that letter already!"
+
+    } // end of new letter process
+
+    //check to see if game is over
+
+} //end function processLetter
+
+//-------------------Program starts here-------------------------------------
+
+getRandomWord()
+
+buildHiddenWord()
 
 gameHTML = "<h1>Welcome to Hangman!</h1>" +
     "<h2>Try to guess the word: " + hiddenWord + "</h2>" +
@@ -57,109 +160,47 @@ document.getElementById("game").innerHTML = (gameHTML);
 document.onkeyup = function(event) {
         letter = String.fromCharCode(event.keyCode).toLowerCase();
 
-        //check to see if the guessed letter was guessed already
-        if (guessedLetters.indexOf(letter) < 0) {
-            //letter was not guessed yet. continue process
-            newLetter = true
-        } else {
-            //the letter was guessed alredy
-            newLetter = false
+        if (validLetter()) {
+            processLetter()
+
+            if (gameover) {
+
+                randomWord = ""
+                hiddenWord = ""
+                guessedLetters = []
+                gameover = false
+                guesses = 8
+
+                getRandomWord()
+
+                buildHiddenWord()
+            }
+
+            gameHTML = "<h1>Hangman!</h1>" +
+                "<h2>" + message + "</h2>" +
+                "<h2>word: " + hiddenWord + "</h2>" +
+                "<h2>Guessed letters: " + guessedLetters.toString() +
+                "<h2>Number of guesses remaining: " + guesses + "</h2>" +
+                "<h2>Wins: " + wins +
+                "<h2>Losses: " + losses +
+                "<h2>Guess a letter of the word by pressing a letter on the keyboard.</h2>"
+
+            document.getElementById("game").innerHTML = (gameHTML);
         }
+        else {
+        	debugger;
+            message = "You pressed an invalid key. Do you know what letters are?"
 
-        //if guessed already, don't add to array and let user know they guessed that letter already
-        //don't process the letter any further
-        //if not guessed, process letter 
+            gameHTML = "<h1>Hangman!</h1>" +
+                "<h2>" + message + "</h2>" +
+                "<h2>word: " + hiddenWord + "</h2>" +
+                "<h2>Guessed letters: " + guessedLetters.toString() +
+                "<h2>Number of guesses remaining: " + guesses + "</h2>" +
+                "<h2>Wins: " + wins +
+                "<h2>Losses: " + losses +
+                "<h2>Guess a letter of the word by pressing a letter on the keyboard.</h2>"
 
-        if (newLetter === true) {
-
-            guessedLetters.push(letter)
-
-            //check is letter guessed was a hit or miss
-            //if miss, subtract one from guesses
-
-            hits = 0;
-            spaces = 0;
-            hiddenWord = "";
-            //Check to see if letters guessed match within the random word
-            for (var i = 0; i < randomWord.length; i++) {
-
-                if (randomWord.substr(i, 1) === " ") {
-                    //spaces are ignored
-                    hiddenWord += "&nbsp;&nbsp;"
-                    spaces++
-                } //end-if space check
-                else if (guessedLetters.indexOf(randomWord.substr(i, 1)) >= 0) {
-                    //Character of random word matches a guessed letter
-                    hiddenWord += randomWord.substr(i, 1) + " "
-                    hits++
-
-                } //end if of letter match
-                else {
-                    //guessed letter doesn't match the character in random word
-                    hiddenWord += "_ "
-
-                }
-
-            } //end for loop
-
-            if (randomWord.indexOf(letter) >= 0) {
-                //the letter pushed is part of the random word
-                message = "Good Job! You found a letter!"
-            } else {
-                message = "Ooops! Try Again!"
-                guesses--
-            }
-
-            if ((hits + spaces) === randomWord.length) {
-                wins++
-                message = "Congrats! You Won!!! Now try a new word!"
-                gameover = true
-
-                //reset the game with a new word
-                //start over
-            } else if (guesses === 0) {
-                //LOSER
-                message = "You suck! Better luck next time. Try Again!"
-                gameover = true
-            }
-
-        } //end if of new letter
-        else { // we do not have a new letter
-            message = "You tried that letter already!"
-
-        } // end of new letter process
-
-        if (gameover) {
-
-        	randomWord = ""
-        	hiddenWord = ""
-        	guessedLetters = []
-        	gameover = false
-        	guesses = 8
-
-            randomWord = words[Math.floor(Math.random() * words.length)];
-
-            for (var i = 0; i < randomWord.length; i++) {
-
-                if (randomWord.substr(i, 1) === " ") {
-                    letter = randomWord.substr(i, 1)
-                    hiddenWord += "&nbsp;&nbsp;"
-                } else {
-                    letter = randomWord.substr(i, 1)
-                    hiddenWord += "_ "
-                }
-            }
+            document.getElementById("game").innerHTML = (gameHTML);
         }
-
-        gameHTML = "<h1>Hangman!</h1>" +
-            "<h2>" + message + "</h2>" +
-            "<h2>word: " + hiddenWord + "</h2>" +
-            "<h2>Guessed letters: " + guessedLetters.toString() +
-            "<h2>Number of guesses remaining: " + guesses + "</h2>" +
-            "<h2>Wins: " + wins +
-            "<h2>Losses: " + losses +
-            "<h2>Guess a letter of the word by pressing a letter on the keyboard.</h2>"
-
-        document.getElementById("game").innerHTML = (gameHTML);
 
     } //End of onkeyup event
