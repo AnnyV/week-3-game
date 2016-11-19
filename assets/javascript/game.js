@@ -22,14 +22,17 @@ var guessedLetters = [];
 var words = ["scooby doo", "tom and jerry", "thundercats", "voltron", "transformers", "mighty mouse",
     "ren and stimpy", "donald duck", "animaniacs", "beetlejuice", "garfield", "inspector gadget",
     "smurfs", "gummi bears", "johnny quest", "the justice league", "batman", "super man", "south park",
-    "looney tunes", "the jetsons", "the bugs bunny show", "the flinstones", "jem", "dragon ball z"
+    "looney tunes", "the jetsons", "the bugs bunny show", "the flinstones", "jem", "dragon ball z", "Silvester",
+    "sam", "tazmanian demon", "porky", "twetty",
 ]
 
 var randomWord = " ";
 
 var hiddenWord = "";
 var message = " ";
+var hdrMsg = " ";
 var gameHTML = " ";
+var infoHTML = " ";
 var letter = " ";
 
 function validLetter() {
@@ -38,6 +41,25 @@ function validLetter() {
     } else {
         return false
     }
+}
+
+function writeHTML() {
+
+	gameHTML ="<h2>" + message + "</h2>" +
+	 "<h2>Word: " + hiddenWord + "</h2>" +
+	"<h2>Guessed letters: " + guessedLetters.toString() +
+	"<h2>Number of guesses remaining: " + guesses + "</h2>"
+
+	infoHTML = "<h1>" + hdrMsg + "</h1>" +
+	"<h2>Guess a letter of the word by pressing a letter on the keyboard.</h2>" +
+	"<h2>Wins: " + wins +
+	"<h2>Losses: " + losses ;
+
+
+
+
+	document.getElementById("game").innerHTML = (gameHTML);
+	document.getElementById("info").innerHTML = (infoHTML);
 }
 
 function buildHiddenWord() {
@@ -103,7 +125,7 @@ function checkResults() {
         //start over
     } else if (guesses === 0) {
         //LOSER
-        losses++
+        losses++ 
         message = "You suck! Better luck next time. Try Again!"
         return true
     } else {
@@ -148,14 +170,17 @@ getRandomWord()
 
 buildHiddenWord()
 
-gameHTML = "<h1>Welcome to Hangman!</h1>" +
-    "<h2>Try to guess the word: " + hiddenWord + "</h2>" +
-    "<h2>Number of guesses remaining: " + guesses + "</h2>" +
-    "<h2>Wins: " + wins +
-    "<h2>Losses: " + losses +
-    "<h2>Guess a letter of the word by pressing a letter on the keyboard.</h2>"
+hdrMsg = "Welcome to Hangman!"
+writeHTML()
 
-document.getElementById("game").innerHTML = (gameHTML);
+// gameHTML = "<h1>" + hdrMsg + "</h1>" +
+//     "<h2>Try to guess the word: " + hiddenWord + "</h2>" +
+//     "<h2>Number of guesses remaining: " + guesses + "</h2>" +
+//     "<h2>Wins: " + wins +
+//     "<h2>Losses: " + losses +
+//     "<h2>Guess a letter of the word by pressing a letter on the keyboard.</h2>"
+
+// document.getElementById("game").innerHTML = (gameHTML);
 
 document.onkeyup = function(event) {
         letter = String.fromCharCode(event.keyCode).toLowerCase();
@@ -176,31 +201,26 @@ document.onkeyup = function(event) {
                 buildHiddenWord()
             }
 
-            gameHTML = "<h1>Hangman!</h1>" +
-                "<h2>" + message + "</h2>" +
-                "<h2>word: " + hiddenWord + "</h2>" +
-                "<h2>Guessed letters: " + guessedLetters.toString() +
-                "<h2>Number of guesses remaining: " + guesses + "</h2>" +
-                "<h2>Wins: " + wins +
-                "<h2>Losses: " + losses +
-                "<h2>Guess a letter of the word by pressing a letter on the keyboard.</h2>"
+            // gameHTML = "<h1>Hangman!</h1>" +
+            //     "<h2>" + message + "</h2>" +
+            //     "<h2>word: " + hiddenWord + "</h2>" +
+            //     "<h2>Guessed letters: " + guessedLetters.toString() +
+            //     "<h2>Number of guesses remaining: " + guesses + "</h2>" +
+            //     "<h2>Wins: " + wins +
+            //     "<h2>Losses: " + losses +
+            //     "<h2>Guess a letter of the word by pressing a letter on the keyboard.</h2>"
 
-            document.getElementById("game").innerHTML = (gameHTML);
+            // document.getElementById("game").innerHTML = (gameHTML);
         }
         else {
-        	debugger;
+        	
             message = "You pressed an invalid key. Do you know what letters are?"
 
-            gameHTML = "<h1>Hangman!</h1>" +
-                "<h2>" + message + "</h2>" +
-                "<h2>word: " + hiddenWord + "</h2>" +
-                "<h2>Guessed letters: " + guessedLetters.toString() +
-                "<h2>Number of guesses remaining: " + guesses + "</h2>" +
-                "<h2>Wins: " + wins +
-                "<h2>Losses: " + losses +
-                "<h2>Guess a letter of the word by pressing a letter on the keyboard.</h2>"
 
-            document.getElementById("game").innerHTML = (gameHTML);
         }
+
+        hdrMsg = "Hangman!"
+
+        writeHTML()
 
     } //End of onkeyup event

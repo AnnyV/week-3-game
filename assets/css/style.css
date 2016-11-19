@@ -1,0 +1,83 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+
+.logo {
+
+   overflow: hidden;
+   position: absolute;
+}
+
+body{
+	background-color:#3f0068;
+	color:#d9edf7;
+   margin-bottom: 60px;
+}
+   .navbar-inverse{ 
+   	background-color:  #d9edf7;
+   	color: #3c1b0a;
+   }
+
+   .navbar-inverse .navbar-brand, .nav  { 
+   color: #3c1b0a; }
+
+   .logo{
+   	width: 65px;
+      margin-right: 5px;
+   }
+   #ConnectLogos{
+   	width: 65px;
+      margin-right: 5px;
+      margin-left: 59px;
+
+   }
+   .panel-title {
+   	font-family: 'Georgia', Times, Times New Roman, serif;
+   	color:  #3c1b0a;
+   	background-color: #d9edf7;
+      font-size: 22px;
+   }
+   .panel-default>.panel-heading {
+   	background-color:#d9edf7;
+   }
+   element.style {
+      font-size: 30px;
+   }
+   .navbar-inverse .navbar-brand, .navbar-inverse .navbar-brand {
+      color: #3c1b0a;
+      font-size: 30px;
+   }
+   /*.col-md-6 {
+      width:100%;*/
+
+      .caption {
+   font-family: 'Georgia', Times, "Times New Roman", serif;
+   color: #3c1b0a;
+   font-size: 24px;
+   text-align: center;
+   background-color: #d9edf7;
+   padding-top: 10px;
+   padding-bottom: 10px;
+   position: relative;
+   top: -62px;
+   overflow: auto;
+}  
+.footer{
+   background-color: #d9edf7;
+   
+   padding: 20px;
+   width: 100%;
+   text-align: center;
+   color: #3c1b0a;
+   font-family: 'Georgia', Times, "Times New Roman", serif;
+   border-top: 10px solid tan;
+   position: absolute;
+   bottom: 0;
+   /* Set the fixed height of the footer here */
+   height: 60px;
+   
+
+
+}
