@@ -127,6 +127,9 @@ function checkResults() {
         //LOSER
         losses++ 
         message = "You suck! Better luck next time. Try Again!"
+        document.getElementById("gameover").innerHTML = 
+        ("<img class=\"img-responsive\" style=\"width:30%;position:relative;left:190px;\" src=\"assets/images/hang.jpg\" alt=\"Hangman\">" +
+         "<audio autoplay> <source src=\"assets/images/thatsall.mp3\" type=\"audio/mp3\"> </audio>");
         return true
     } else {
         return false
